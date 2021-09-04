@@ -1,6 +1,7 @@
 # Dash-based dashboards
 
-Dashboard originally developed for ENVR 300 at UBC. Purpose is to explore the predictive capabilities and limitations of linear approximate models on portions of Mauna Loa CO2.
+Explore the predictive capabilities and limitations of linear approximate models on portions of Mauna Loa CO2.
+Dashboard originally developed for ENVR 300 at UBC. 
 
 ## How to run locally (on your own computer)
 Dash is a library for making interactive applications that will run in a browser window. See https://dash.plotly.com/. We are using "Dash open-source" NOT Dash Enterprise. 
