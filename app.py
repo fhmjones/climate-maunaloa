@@ -34,7 +34,7 @@ app = dash.Dash(
 ##################################
 # Fetch and prep the data
 # read in the data from the prepared CSV file. 
-co2_data_source = "./data/monthly_in_situ_co2_mlo.csv"
+co2_data_source = "monthly_in_situ_co2_mlo.csv"
 co2_data_full = pd.read_csv(
     co2_data_source, skiprows=np.arange(0, 56), na_values="-99.99"
 )
