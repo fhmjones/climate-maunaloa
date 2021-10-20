@@ -13,8 +13,8 @@ from os import environ
 
 import pandas as pd
 import dash
-import dash_core_components as dcc
-import dash_html_components as html
+from dash import dcc
+from dash import html
 # plotly express could be used for simple applications
 # but this app needs to build plotly graph components separately 
 import plotly.graph_objects as go
@@ -58,22 +58,22 @@ def predict_co2(slope, intercept, initial_date, prediction_date):
 app.layout = html.Div([
 # Introduction
     dcc.Markdown('''
-        ### Approximate linear models for CO2 at Mauna Loa, Hawaii
+        ### Approximate linear models for CO_2 at Mauna Loa, Hawaii
 
-        #### Instructions 
-
-        The plot below shows measurements of monthly-averaged CO2 concentrations (in ppm), 
-        from Mauna Loa Observatory, spanning from 1958-2020. Initially, just the first 5 years of data are shown, but you can
-        select whether to see only the first 5 years of data, only the last 5 years, or the whole data set.
-        An adjustable linear trend (orange line) is also plotted. 
+        This plot shows measurements of monthly-averaged CO_2 concentrations (in ppm) at the
+        Mauna Loa Observatory between 1958 and 2020. An adjustable linear trend is also plotted. 
         
-        Your task is to adjust the trend by changing its slope and intercept, 
-        to fit the straight line so it can represent a linear model for the *first 5 years* of data. Then you will do the same
-        to fit a linear model to the *most recent* 5 years of data. 
-        Do your two linear models predict the same CO2 concentrations for the year 2030? 
-        NOTE: the predicted value in ppm is given just above the graph. 
-        
-        When your mouse is over the graph, interactive graph controls appear above the graph for zooming, panning resetting or saving to an image.
+        **Instructions:**
+        - Adjust the slope and intercept of the linear trend so the straight line "fits" the *first 5 years* of data. 
+            - Adjust "Signal type" and "Plot segment" to refine your fit. 
+            - Click a slider, then use keyboard left/right arrows to "slide" the control. 
+            - Note the value for "Predicted CO_2 for 2030" (the graph's title).
+        - Do the same to make the line fit the *most recent* 5 years of data. 
+            - Note the new value for "Predicted CO_2 for 2030".
+        - Do your two linear models predict the same CO2 concentrations for the year 2030? 
+        - Small icons between controls and graph have mouse-over tool tips. 
+        - If desired, use the "Download plot as png" to save an image of your work. 
+        - Feedback about this dashboard app can be given using the form below the graph. Your insights will help us refine dashboards for learning. 
 
         ----
         
@@ -125,16 +125,14 @@ app.layout = html.Div([
             {'label': 'Seasonally adjusted data', 'value': 'adj'},
             {'label': 'Raw data', 'value': 'raw'}
             ],
-            value='adj'
+            value='raw'
         ),
     ], style={'width': '48%', 'display': 'inline-block'}),
 
 # Done this way to make easier to set appropriate y-axis limits
 # Could use sliders commented out above if y-axis limits are set by calculating range for years-span
      html.Div([
-       # dcc.Markdown('''
-       # _Choose first or last 5 years of data_         
-       # '''),
+         dcc.Markdown(''' **_Plot Segment:_** '''),
          dcc.RadioItems(
             id='zone',
             options=[
@@ -142,33 +140,29 @@ app.layout = html.Div([
             {'label': 'last 5 years', 'value': 'last5yrs'},
             {'label': 'All data', 'value': 'alldata'}
             ],
-            value='1st5yrs'
+            value='alldata'
         ),
     ], style={'width': '48%', 'display': 'inline-block'}),
 
 # after controls, place plot
-    dcc.Graph(id='graph'),
+    dcc.Graph(
+        id='graph',
+        config={
+            'displayModeBar': True,
+            'modeBarButtonsToRemove': ['select', 'lasso2d', 'resetScale'],                     
+            }
+        ),
+
+    # long generic survey
+    # html.Iframe(src="https://ubc.ca1.qualtrics.com/jfe/form/SV_3yiBycgV0t8YhCu", style={"height": "800px", "width": "100%"}), 
+    # short generic survey: 
+    html.Iframe(src="https://ubc.ca1.qualtrics.com/jfe/form/SV_9zS1U0C7odSt76K", style={"height": "800px", "width": "100%"}),
+
 
 # closing text
     dcc.Markdown('''
         ----
-        #### Discussion and Questions
-
-        Within relatively short time windows (e.g. 5 years), the linear model can represent a 
-        reasonable fit to the data, but it remains less clear how good the predictive power of 
-        this model is for longer periods. 
-        
-        To analyze this further, revisit the linear fit for "early" and "recent" 5 year periods and **answer the following**:
-
-          1. Out to which year would you trust the model built for the window 1958 - 1963? In other words, where does this model start to break down?
-          2. How far out would you trust the model predictions with the model built for 2015 - 2020? Would you trust the model to predict CO_2 for the year 2050?
-          3. How might you approach building a model to fit all of the data (1958-2020)?
-          4. Given what the "raw data" look like, what do you think "seasonally adjusted data" means?
-          5. Use the graph's "Camera" icon to make a PNG file of your graph with all data and linear model fitting determined from the *first* 5 years.
-          6. Do the same for the case with linear model fitting from the *last* 5 years. Submit both PNG files for assessment.
-
-        ----
-        #### Attribution
+        #### Credits
 
         * Derived from [L. Heagy's presentation](https://ubc-dsci.github.io/jupyterdays/sessions/heagy/widgets-and-dashboards.html) at
         UBC's Jupyter Days 2020, which in turn is adapted from the [Intro-Jupyter tutorial from ICESat-2Hackweek](https://github.com/ICESAT-2HackWeek/intro-jupyter). 
